@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineBook — Select Seats</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="seats">
+
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="logo-icon-3d">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="2" y="3" width="22" height="15" rx="4" transform="rotate(-8 2 3)" fill="#EC4899" fill-opacity="0.8"/>
+            <rect x="4" y="5" width="22" height="15" rx="4" fill="url(#navLogoGrad)"/>
+            <path d="M9 10h2v2H9v-2zm0 3h2v2H9v-2zm4-3h8v2h-8v-2zm0 3h8v2h-8v-2z" fill="white"/>
+            <defs>
+              <linearGradient id="navLogoGrad" x1="4" y1="5" x2="26" y2="20">
+                <stop offset="0%" stop-color="#8B5CF6"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">CineBook</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="movies.html" class="nav-link active">Movies</a></li>
+        <li><a href="mybookings.html" class="nav-link">My Bookings</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <div class="location-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Chennai</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <button class="icon-btn" title="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="icon-btn profile-btn" title="Profile">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── PROGRESS STEPPER ───────────────────────────────── -->
+  <div class="stepper-section">
+    <div class="container">
+      <div class="stepper">
+        <div class="step-item completed">
+          <div class="step-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="step-label">Select Movie</span>
+        </div>
+        <div class="step-line completed"></div>
+
+        <div class="step-item completed">
+          <div class="step-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="step-label">Choose Show</span>
+        </div>
+        <div class="step-line active"></div>
+
+        <div class="step-item active">
+          <div class="step-circle glowing">3</div>
+          <span class="step-label">Select Seats</span>
+        </div>
+        <div class="step-line"></div>
+
+        <div class="step-item">
+          <div class="step-circle">4</div>
+          <span class="step-label">Booking Details</span>
+        </div>
+        <div class="step-line"></div>
+
+        <div class="step-item">
+          <div class="step-circle">5</div>
+          <span class="step-label">Confirmation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── THREE-PANEL SEAT BOOKING WORKSPACE ──────────────── -->
+  <main class="seat-workspace">
+    <div class="container-fluid workspace-container">
+
+      <!-- LEFT PANEL: MOVIE DETAILS -->
+      <aside class="panel movie-panel" id="moviePanel">
+        <div class="movie-poster-card">
+          <img id="detailPoster" src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Movie Poster" class="panel-poster-img" />
+          <div class="poster-rating-pill">
+            <span class="star-icon">★</span>
+            <span id="detailRating" class="rating-num">8.6</span>
+            <span class="rating-votes">(1.2M votes)</span>
+          </div>
+        </div>
+
+        <h1 id="detailTitle" class="movie-card-title">Interstellar</h1>
+
+        <div class="genre-pills-row" id="detailGenrePills">
+          <span class="genre-pill">Sci-Fi</span>
+          <span class="genre-pill">Adventure</span>
+          <span class="genre-pill">Drama</span>
+        </div>
+
+        <ul class="movie-meta-list">
+          <li class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="detailDuration">169 min</span>
+          </li>
+          <li class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span id="detailLanguage">English</span>
+          </li>
+          <li class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 9v6a3 3 0 0 0 6 0V9"/></svg>
+            <span>U/A</span>
+          </li>
+          <li class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span id="detailDate">Sat, 14 Dec 2024</span>
+          </li>
+          <li class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="detailTime">6:00 PM</span>
+          </li>
+          <li class="meta-item venue-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <div class="venue-name">PVR - Express Avenue, Chennai</div>
+              <div class="venue-screen">Screen 1</div>
+            </div>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- CENTER PANEL: CINEMA THEATRE SEAT MAP -->
+      <section class="panel theatre-panel">
+
+        <!-- House Full Banner (shows when all booked) -->
+        <div class="house-full-banner" id="houseFullBanner" style="display:none">
+          <div class="house-full-content">
+            <div class="house-full-badge">HOUSE FULL</div>
+            <div>
+              <h3 style="font-size:1.1rem;font-weight:700;">All 30 seats are booked!</h3>
+              <p class="text-muted" id="waitlistCount">Join waiting list for FIFO auto-booking.</p>
+            </div>
+            <button class="btn-warning" id="joinWaitlistBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Join Waiting List
+            </button>
+          </div>
+        </div>
+
+        <!-- Curved Cosmic Screen -->
+        <div class="cosmic-screen-container" id="screenContainer">
+          <div class="cosmic-screen">
+            <div class="cosmic-nebula"></div>
+            <div class="screen-content">
+              <span class="screen-text">S C R E E N &nbsp;&nbsp; T H I S &nbsp;&nbsp; W A Y</span>
+            </div>
+            <div class="screen-arc-glow"></div>
+          </div>
+          <div class="screen-light-projection"></div>
+        </div>
+
+        <!-- Armchair Seat Matrix (5 Rows x 6 Cols) -->
+        <div class="theatre-matrix-wrapper" id="seatGridWrapper">
+          <div class="theatre-matrix" id="seatGrid">
+            <!-- Injected by app.js: 5 rows with labels A-E and realistic armchairs A1-E6 -->
+          </div>
+        </div>
+
+        <!-- Legend Bar at Bottom -->
+        <div class="theatre-legend-bar" id="seatLegend">
+          <div class="legend-pill-item">
+            <div class="armchair-icon available"></div>
+            <span>Available</span>
+          </div>
+          <div class="legend-pill-item">
+            <div class="armchair-icon selected"></div>
+            <span>Selected</span>
+          </div>
+          <div class="legend-pill-item">
+            <div class="armchair-icon booked"></div>
+            <span>Booked</span>
+          </div>
+        </div>
+
+        <div class="seats-loading" id="seatsLoading">
+          <div class="spinner"></div>
+          <p class="text-muted" style="margin-top:12px;">Loading Cinema Hall...</p>
+        </div>
+      </section>
+
+      <!-- RIGHT PANEL: BOOKING SUMMARY -->
+      <aside class="panel summary-panel" id="bookingSummary">
+        <h2 class="summary-heading">Booking Summary</h2>
+
+        <!-- Mini Movie Snapshot -->
+        <div class="mini-movie-card">
+          <img id="miniPoster" src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Poster" class="mini-poster" />
+          <div class="mini-movie-details">
+            <h3 id="miniTitle" class="mini-title">Interstellar</h3>
+            <div id="miniGenre" class="mini-genre">Sci-Fi / Adventure</div>
+            <div class="mini-info-row">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span id="miniDate">Sat, 14 Dec 2024</span>
+            </div>
+            <div class="mini-info-row">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="miniTime">6:00 PM</span>
+            </div>
+            <div class="mini-info-row">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A1A8B8" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>PVR - Express Avenue<br/>Screen 1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Seats Section -->
+        <div class="selected-seats-block">
+          <div class="block-header">
+            <span class="block-title">Selected Seats</span>
+            <button class="btn-edit-seats" id="btnEditSeats">Edit</button>
+          </div>
+          <div class="chips-container" id="selectedSeatChips">
+            <span class="no-seats-placeholder">No seats selected yet. Click any armchair in the hall!</span>
+          </div>
+        </div>
+
+        <!-- Number of Tickets Stepper -->
+        <div class="summary-control-row">
+          <span class="control-label">Number of Tickets</span>
+          <div class="ticket-stepper">
+            <button class="step-btn" id="stepMinus" disabled aria-label="Decrease tickets">−</button>
+            <span class="step-value" id="ticketCountDisplay">0</span>
+            <button class="step-btn" id="stepPlus" aria-label="Increase tickets">+</button>
+          </div>
+        </div>
+
+        <!-- Price per ticket -->
+        <div class="summary-control-row price-sub-row">
+          <span class="control-label text-muted">Price per ticket</span>
+          <span class="price-val">₹180</span>
+        </div>
+
+        <!-- Total Amount -->
+        <div class="total-amount-row">
+          <span class="total-label">Total Amount</span>
+          <span class="total-number gradient-text" id="totalAmountDisplay">₹0</span>
+        </div>
+
+        <!-- Proceed CTA Button -->
+        <button class="btn-proceed-cta" id="proceedBtn" disabled>
+          <span>Proceed to Booking</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        <!-- Security Note -->
+        <div class="security-badge-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Your booking is safe and secure (Demo)</span>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ── CUSTOMER NAME MODAL ────────────────────────────── -->
+  <div class="modal-overlay" id="customerModal" style="display:none">
+    <div class="modal-box modal-sm">
+      <button class="modal-close" id="closeCustomerModal">&times;</button>
+      <h3 class="modal-title" style="font-size:1.3rem;font-weight:800;margin-bottom:6px;">Confirm Your Booking</h3>
+      <p class="text-muted" style="margin-bottom:20px; font-size:0.88rem;">Please enter your full name for the booking ticket.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="customerNameInput" class="form-input" placeholder="e.g. Rahul Sharma" autocomplete="name" />
+      </div>
+
+      <div class="booking-preview-pill" id="modalBookingPreview">
+        <!-- Injected seats preview -->
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelCustomerModal">Cancel</button>
+        <button class="btn-primary" id="confirmBookingBtn">
+          <span>Confirm &amp; Pay</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WAITLIST MODAL ─────────────────────────────────── -->
+  <div class="modal-overlay" id="waitlistModal" style="display:none">
+    <div class="modal-box modal-sm">
+      <button class="modal-close" id="closeWaitlistModal">&times;</button>
+      <h3 class="modal-title" style="font-size:1.3rem;font-weight:800;margin-bottom:6px;">Join Waiting List (FIFO)</h3>
+      <p class="text-muted" style="margin-bottom:20px; font-size:0.88rem;">When any booking is cancelled, seats are auto-allocated to waiting customers strictly in order.</p>
+      
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="waitlistNameInput" class="form-input" placeholder="e.g. Priya Menon" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Seats Needed</label>
+        <input type="number" id="waitlistSeatsInput" class="form-input" min="1" max="30" value="2" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelWaitlistModal">Cancel</button>
+        <button class="btn-primary" id="confirmWaitlistBtn">Join Queue</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

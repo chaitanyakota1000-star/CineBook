@@ -1,0 +1,3 @@
+@echo off
+echo Opening CineBook in your default browser...
+start http://localhost:8080/
