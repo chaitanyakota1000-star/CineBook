@@ -6,14 +6,56 @@
  * Works both as a standard browser script (attaching to window) and as an ES module.
  */
 
-const BASE_URL = (typeof window !== 'undefined' && window.location.origin && window.location.origin.startsWith('http'))
-  ? `${window.location.origin}/api`
-  : 'http://localhost:8080/api';
+/**
+ * Resolves the backend API base URL using priority:
+ * 1. window.CINEBOOK_CONFIG.BACKEND_URL (from js/config.js)
+ * 2. localStorage.getItem('cinebook_backend_url') (in-browser custom setting)
+ * 3. Localhost / local files -> http://localhost:8080/api
+ * 4. Deployed origin -> ${window.location.origin}/api
+ */
+function getApiBaseUrl() {
+  if (typeof window !== 'undefined') {
+    // 1. Check js/config.js
+    if (window.CINEBOOK_CONFIG && window.CINEBOOK_CONFIG.BACKEND_URL && window.CINEBOOK_CONFIG.BACKEND_URL.trim()) {
+      const u = window.CINEBOOK_CONFIG.BACKEND_URL.trim().replace(/\/+$/, '');
+      return u.endsWith('/api') ? u : `${u}/api`;
+    }
+    // 2. Check localStorage
+    try {
+      const saved = localStorage.getItem('cinebook_backend_url');
+      if (saved && saved.trim()) {
+        const u = saved.trim().replace(/\/+$/, '');
+        return u.endsWith('/api') ? u : `${u}/api`;
+      }
+    } catch (_) {}
+
+    // 3. Local development
+    const host = window.location.hostname;
+    const proto = window.location.protocol;
+    if (proto === 'file:' || host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
+      return 'http://localhost:8080/api';
+    }
+
+    // 4. Same origin (if backend serves frontend static files)
+    return `${window.location.origin}/api`;
+  }
+  return 'http://localhost:8080/api';
+}
+
+function setBackendUrl(url) {
+  if (url && url.trim()) {
+    localStorage.setItem('cinebook_backend_url', url.trim());
+  } else {
+    localStorage.removeItem('cinebook_backend_url');
+  }
+  window.location.reload();
+}
 
 /**
  * Core fetch wrapper with timeout and JSON parsing.
  */
 async function request(endpoint, options = {}) {
+  const baseUrl = getApiBaseUrl();
   const defaultHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -29,10 +71,10 @@ async function request(endpoint, options = {}) {
 
   let response;
   try {
-    response = await fetch(`${BASE_URL}${endpoint}`, config);
+    response = await fetch(`${baseUrl}${endpoint}`, config);
   } catch (netErr) {
     console.error(`[API Network Error] ${endpoint}:`, netErr);
-    throw new Error('Cannot connect to Java backend. Please make sure the Spring Boot server is running on http://localhost:8080');
+    throw new Error(`Cannot connect to Java backend at ${baseUrl}. If hosting on Render free tier, please wait ~30 seconds for the server to wake up.`);
   }
 
   if (!response.ok) {
@@ -198,6 +240,8 @@ if (typeof window !== 'undefined') {
   window.getWaitlist = getWaitlist;
   window.getWaitlistInfo = getWaitlistInfo;
   window.showToast = showToast;
+  window.getApiBaseUrl = getApiBaseUrl;
+  window.setBackendUrl = setBackendUrl;
   window.CineAPI = {
     getMovies,
     getMovie,
@@ -213,5 +257,7 @@ if (typeof window !== 'undefined') {
     getWaitlist,
     getWaitlistInfo,
     showToast,
+    getApiBaseUrl,
+    setBackendUrl,
   };
 }
