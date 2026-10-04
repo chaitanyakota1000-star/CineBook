@@ -120,11 +120,20 @@ public class BookingController {
     }
 
     /**
-     * GET /api/waitlist/{showId}
+     * GET /api/bookings/waitlist/{showId}
      * Returns the current waiting list for a show.
      */
     @GetMapping("/waitlist/{showId}")
     public ResponseEntity<Map<String, Object>> getWaitlistInfo(@PathVariable String showId) {
         return ResponseEntity.ok(bookingService.getWaitlistInfo(showId));
+    }
+
+    /**
+     * GET /api/bookings/dsa-state/{showId}
+     * Unified real-time snapshot of 2D array, HashMap, and FIFO Queue for CineBook DSA Visualizer.
+     */
+    @GetMapping("/dsa-state/{showId}")
+    public ResponseEntity<Map<String, Object>> getDsaState(@PathVariable String showId) {
+        return ResponseEntity.ok(bookingService.getDsaState(showId));
     }
 }

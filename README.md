@@ -189,17 +189,60 @@ private final Map<String, Booking> bookingMap = new HashMap<>();
 
 ---
 
-## Running Both Together (Quick Start)
+## Standalone CineBook DSA Visualizer (Desktop Swing Application)
 
-Open TWO terminal windows:
+CineBook includes a standalone Java Swing desktop application that connects live to the running Spring Boot backend and visualizes all 4 core data structures in real time:
 
-**Terminal 1 (Backend):**
-```bash
-cd CineBook/backend
-mvn spring-boot:run
+1. **🪑 2D Seat Array (`int[5][6]`)**
+   - Displays cinema armchair grid with memory indices `[row][col]`, labels (`A1`-`E6`), and stored binary values (`0 = AVAILABLE`, `1 = BOOKED`).
+   - Click any cell to inspect direct memory coordinates and $O(1)$ random access access formulas (`'A'+row`, `col+1`).
+
+2. **🗺️ Booking HashMap (`HashMap<String, Booking> bookingMap`)**
+   - Displays real booking records stored in the backend with $O(1)$ amortized put/get complexity.
+   - Interactive $O(1)$ key search (`get(key)`): calculates `hashCode()` and bucket index (`Math.abs(hash) % 16`).
+   - 16-Bucket Hash Table visualizer showing separate chaining node links (`Bucket[i] ➔ Node[BK1001]`).
+   - Live status tracking (`CONFIRMED` in green, `CANCELLED` in red).
+
+3. **👥 Waiting Queue (Custom FIFO LinkedList `WaitingList`)**
+   - Visualizes First-In First-Out pipeline: `FRONT (Head) ────► Node ────► REAR (Tail)`.
+   - Live pointers: `front` (peek next customer) and `rear` (new requests append here in $O(1)$).
+   - Built-in waitlist test tool: Enqueue test customers and watch auto-allocation occur immediately upon seat cancellation!
+
+4. **🏷️ Occupied Seats HashSet (`HashSet<String> occupiedSeatsSet`)**
+   - Visualizes all occupied seat codes and demonstrates $O(1)$ membership checks (`contains(seat)`) preventing race conditions and duplicate bookings.
+
+### Launching the DSA Visualizer on Windows
+
+Ensure your Spring Boot backend is running on `http://localhost:8080`, then run:
+
+```bat
+run-dsa-visualizer.bat
 ```
 
-**Terminal 2 (View in browser):**
+Or run manually from the terminal:
+```bash
+javac visualizer/CineBookDsaVisualizer.java
+java visualizer.CineBookDsaVisualizer
+```
+
+---
+
+## Running Everything Together (Quick Start)
+
+Open THREE windows:
+
+**Window 1 (Backend):**
+```bash
+cd CineBook/backend
+mvnw.cmd spring-boot:run
+```
+
+**Window 2 (Frontend Website):**
 ```bash
 start CineBook/frontend/index.html
+```
+
+**Window 3 (Desktop DSA Visualizer):**
+```bat
+run-dsa-visualizer.bat
 ```

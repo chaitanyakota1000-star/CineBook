@@ -251,4 +251,71 @@ public class BookingService {
         response.put("customers", waitlist.getAllWaiting());
         return response;
     }
+
+    public Map<String, Object> getDsaState(String showId) {
+        Map<String, Object> state = new LinkedHashMap<>();
+
+        // 1. Seat Array (2D Matrix int[5][6])
+        Theatre theatre = getOrCreateTheatre(showId);
+        Map<String, Object> seatArrayInfo = new LinkedHashMap<>();
+        seatArrayInfo.put("variableName", "theatreMap.get(\"" + showId + "\").seats");
+        seatArrayInfo.put("type", "int[5][6]");
+        seatArrayInfo.put("rows", Theatre.ROWS);
+        seatArrayInfo.put("cols", Theatre.COLS);
+        seatArrayInfo.put("totalSeats", Theatre.ROWS * Theatre.COLS);
+        seatArrayInfo.put("availableCount", theatre.getAvailableCount());
+        seatArrayInfo.put("bookedCount", (Theatre.ROWS * Theatre.COLS) - theatre.getAvailableCount());
+        seatArrayInfo.put("matrix", theatre.getSeatsCopy());
+        seatArrayInfo.put("isFull", theatre.isFull());
+        state.put("seatArray", seatArrayInfo);
+
+        // 2. Booking HashMap
+        Map<String, Object> hashMapInfo = new LinkedHashMap<>();
+        hashMapInfo.put("variableName", "bookingMap");
+        hashMapInfo.put("type", "HashMap<String, Booking>");
+        hashMapInfo.put("size", bookingMap.size());
+
+        Map<String, Object> allEntries = new LinkedHashMap<>();
+        List<Booking> showBookings = new ArrayList<>();
+        Set<String> occupiedSeatSet = new LinkedHashSet<>();
+
+        for (Map.Entry<String, Booking> entry : bookingMap.entrySet()) {
+            Booking b = entry.getValue();
+            allEntries.put(entry.getKey(), b);
+            if (showId.equals(b.getShowId())) {
+                showBookings.add(b);
+                if ("CONFIRMED".equalsIgnoreCase(b.getStatus())) {
+                    occupiedSeatSet.addAll(b.getBookedSeats());
+                }
+            }
+        }
+        hashMapInfo.put("entries", allEntries);
+        hashMapInfo.put("showBookings", showBookings);
+        state.put("hashMap", hashMapInfo);
+
+        // 3. Waiting Queue (FIFO)
+        WaitingList waitlist = getOrCreateWaitlist(showId);
+        Map<String, Object> queueInfo = new LinkedHashMap<>();
+        queueInfo.put("variableName", "waitlistMap.get(\"" + showId + "\")");
+        queueInfo.put("type", "Custom FIFO LinkedList Queue (WaitingList)");
+        queueInfo.put("size", waitlist.getSize());
+        queueInfo.put("isEmpty", waitlist.isEmpty());
+        WaitingList.Node frontNode = waitlist.peek();
+        queueInfo.put("frontCustomer", frontNode != null ? frontNode.customerName : null);
+        queueInfo.put("frontSeatsRequested", frontNode != null ? frontNode.seatsRequested : 0);
+        queueInfo.put("elements", waitlist.getAllWaiting());
+        state.put("queue", queueInfo);
+
+        // 4. Occupied Seats HashSet
+        Map<String, Object> hashSetInfo = new LinkedHashMap<>();
+        hashSetInfo.put("variableName", "occupiedSeatsSet");
+        hashSetInfo.put("type", "HashSet<String>");
+        hashSetInfo.put("size", occupiedSeatSet.size());
+        hashSetInfo.put("elements", occupiedSeatSet);
+        state.put("hashSet", hashSetInfo);
+
+        state.put("showId", showId);
+        state.put("timestamp", nowTimestamp());
+        return state;
+    }
 }
