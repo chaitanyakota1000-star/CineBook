@@ -6,23 +6,56 @@ echo   Backend: Spring Boot 3.2  ^|  Port: 8080
 echo ===================================================================
 echo.
 
-set MVN=C:\Users\chait\.m2\wrapper\dists\apache-maven-3.9.16\0daed3be3ebd1c706f0e69e8b07c6b73f5cc4ea3dfce72a8d0ec2e849ca2ddb0\bin\mvn.cmd
+cd /d "%~dp0backend"
 
-IF NOT EXIST "%MVN%" (
-    set MVN=mvn
+:: Verify Java is available
+where java >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [ERROR] Java is not installed or not found on PATH.
+    echo Please install Java 17 or higher from https://adoptium.net
+    echo.
+    pause
+    exit /b 1
 )
 
-echo Starting Spring Boot server...
+echo Starting Spring Boot server on port 8080...
 echo.
-echo Once you see "Started MainApplication", open your browser:
+echo Once started, you can access the website at:
 echo.
-echo    >>> http://localhost:8080 <<<
+echo    http://localhost:8080
 echo.
-echo Press Ctrl+C in this window when you want to stop the server.
+echo Press Ctrl+C in this window to stop the server.
 echo ===================================================================
 echo.
 
-cd /d "%~dp0backend"
-"%MVN%" spring-boot:run
+:: 1. If compiled JAR exists, launch it directly for instant startup
+if exist "target\cinebook-backend-1.0.0.jar" (
+    echo Launching pre-built JAR: target\cinebook-backend-1.0.0.jar
+    java -jar target\cinebook-backend-1.0.0.jar
+    goto :end
+)
 
-pause
+:: 2. Otherwise use Maven Wrapper (mvnw.cmd)
+if exist "mvnw.cmd" (
+    echo Launching via Maven Wrapper (mvnw.cmd)...
+    call mvnw.cmd spring-boot:run
+    goto :end
+)
+
+:: 3. Fallback to system Maven
+where mvn >nul 2>&1
+if %errorlevel% equ 0 (
+    echo Launching via system Maven...
+    mvn spring-boot:run
+    goto :end
+)
+
+echo [ERROR] Neither target\cinebook-backend-1.0.0.jar nor mvnw.cmd found.
+echo.
+
+:end
+if %errorlevel% neq 0 (
+    echo.
+    echo Server process exited with code %errorlevel%.
+    pause
+)
